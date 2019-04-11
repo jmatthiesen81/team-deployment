@@ -43,6 +43,7 @@ class Deployment extends Command
      *
      * @return int|void|null
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
+     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -59,7 +60,7 @@ class Deployment extends Command
             $pluginName = $plugin->getName();
             $helper     = $this->getHelper('question');
 
-            $question   = new ConfirmationQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', true, '/^(y|j)/i');
+            $question = new ConfirmationQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', true, '/^(y|j)/i');
             if ($helper->ask($input, $output, $question)) {
                 $arguments = new ArrayInput(['plugins' => [$pluginName], '--activate' => true]);
                 $command   = $this->getApplication()->find('plugin:install');

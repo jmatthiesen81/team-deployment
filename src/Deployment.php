@@ -2,11 +2,13 @@
 
 namespace TeamDeployment\Plugin\Deployment;
 
-use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
+/**
+ * Class Deployment
+ *
+ * @package TeamDeployment\Plugin\Deployment
+ */
 class Deployment extends Plugin
 {
-
 }
