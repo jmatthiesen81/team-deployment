@@ -1,7 +1,6 @@
 {
-  "name": "shopware-labs/swag-deployment",
-  "description": "Bundle example",
-  "version": "v1.0.0",
+  "name": "team-deployment/deployment",
+  "description": "Deployment",
   "type": "shopware-platform-plugin",
   "license": "MIT",
   "authors": [
@@ -11,11 +10,11 @@
   ],
   "autoload": {
     "psr-4": {
-      "ShopwareLabs\\Plugin\\SwagDeployment\\": "src/"
+      "TeamDeployment\\Plugin\\Deployment\\": "src/"
     }
   },
   "extra": {
-    "shopware-plugin-class": "ShopwareLabs\\Plugin\\SwagDeployment\\SwagDeployment",
+    "shopware-plugin-class": "TeamDeployment\\Plugin\\Deployment\\Deployment",
     "copyright": "(c) by shopware AG",
     "label": {
       "de_DE": "Beispiel für Shopware",

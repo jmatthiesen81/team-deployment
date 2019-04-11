@@ -5,8 +5,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="ShopwareLabs\Plugin\SwagDeployment\Commands\Deployment">
-            <argument>swag:deploy</argument>
+        <service id="TeamDeployment\Plugin\Deployment\Commands\Deployment">
+            <argument>team-deployment:deploy</argument>
             <argument id="plugin.repository" type="service" key="$pluginRepository" />
             <tag name="console.command"/>
         </service>

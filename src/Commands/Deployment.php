@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagDeployment\Commands;
+namespace TeamDeployment\Plugin\Deployment\Commands;
 
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * Class Deployment
  *
- * @package ShopwareLabs\Plugin\SwagDeployment\Commands
+ * @package TeamDeployment\Plugin\Deployment\Commands
  */
 class Deployment extends Command
 {
@@ -35,14 +35,6 @@ class Deployment extends Command
     {
         parent::__construct($name);
         $this->pluginRepository = $pluginRepository;
-    }
-
-    /**
-     *
-     */
-    protected function configure(): void
-    {
-        $this->setName('swag:deploy');
     }
 
     /**
