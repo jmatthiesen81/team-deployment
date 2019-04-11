@@ -17,8 +17,7 @@
     "shopware-plugin-class": "TeamDeployment\\Plugin\\Deployment\\Deployment",
     "copyright": "(c) by shopware AG",
     "label": {
-      "de_DE": "Beispiel für Shopware",
-      "en_GB": "Example for Shopware"
+      "en_GB": "Deployment for Shopware"
     }
   }
 }
