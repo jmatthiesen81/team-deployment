@@ -5,7 +5,7 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Patrick Kdot"
+      "name": "Team Deployment"
     }
   ],
   "autoload": {
@@ -15,7 +15,7 @@
   },
   "extra": {
     "shopware-plugin-class": "TeamDeployment\\Plugin\\Deployment\\Deployment",
-    "copyright": "(c) by shopware AG",
+    "copyright": "(c) Team Deployment",
     "label": {
       "en_GB": "Deployment for Shopware"
     }
