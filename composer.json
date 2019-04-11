@@ -1,0 +1,25 @@
+{
+  "name": "shopware-labs/swag-deployment",
+  "description": "Bundle example",
+  "version": "v1.0.0",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Patrick Kdot"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ShopwareLabs\\Plugin\\SwagDeployment\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "ShopwareLabs\\Plugin\\SwagDeployment\\SwagDeployment",
+    "copyright": "(c) by shopware AG",
+    "label": {
+      "de_DE": "Beispiel für Shopware",
+      "en_GB": "Example for Shopware"
+    }
+  }
+}
