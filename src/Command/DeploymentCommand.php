@@ -17,7 +17,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Class DeploymentCommand
- * @package TeamDeployment\Plugin\Deployment\Commands
+ * @package TeamDeployment\Plugin\Deployment\Command
  */
 class DeploymentCommand extends Command
 {
@@ -27,9 +27,8 @@ class DeploymentCommand extends Command
     protected $pluginRepository;
 
     /**
-     * Deployment constructor.
-     *
-     * @param string                    $name
+     * DeploymentCommand constructor.
+     * @param string $name
      * @param EntityRepositoryInterface $pluginRepository
      */
     public function __construct(string $name, EntityRepositoryInterface $pluginRepository)
@@ -40,12 +39,7 @@ class DeploymentCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|void|null
-     * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
-     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -78,6 +72,7 @@ class DeploymentCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return bool
+     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
     private function askQuestion(string $questionText, InputInterface $input, OutputInterface $output): bool
     {
@@ -92,28 +87,22 @@ class DeploymentCommand extends Command
     }
 
     /**
-     * @param string          $pluginName
-     * @param OutputInterface $output
-     *
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
     private function installPlugin(string $pluginName, OutputInterface $output)
     {
         $arguments = new ArrayInput(['plugins' => [$pluginName], '--activate' => true]);
-        $command   = $this->getApplication()->find('plugin:install');
+        $command = $this->getApplication()->find('plugin:install');
         $command->run($arguments, $output);
     }
 
     /**
-     * @param string          $pluginName
-     * @param OutputInterface $output
-     *
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
     private function updatePlugin(string $pluginName, OutputInterface $output)
     {
         $arguments = new ArrayInput(['plugins' => [$pluginName]]);
-        $command   = $this->getApplication()->find('plugin:update');
+        $command = $this->getApplication()->find('plugin:update');
         $command->run($arguments, $output);
     }
 }

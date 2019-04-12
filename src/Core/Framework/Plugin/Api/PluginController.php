@@ -47,9 +47,7 @@ class PluginController extends AbstractController
 
     /**
      * @Route("/api/v{version}/_action/plugin/deploy", name="api.action.plugin.installAll", methods={"POST"})
-     * @param Context $context
      *
-     * @return JsonResponse
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Shopware\Core\Framework\Plugin\Exception\PluginComposerJsonInvalidException
      * @throws \Shopware\Core\Framework\Plugin\Exception\PluginNotInstalledException
@@ -59,7 +57,7 @@ class PluginController extends AbstractController
     {
         $pluginList = $this->refreshPlugins($context);
 
-        foreach($pluginList as $plugin) {
+        foreach ($pluginList as $plugin) {
             $this->pluginLifecycleService->updatePlugin($plugin, $context);
             $this->pluginLifecycleService->installPlugin($plugin, $context);
             $this->pluginLifecycleService->activatePlugin($plugin, $context);
@@ -70,9 +68,7 @@ class PluginController extends AbstractController
 
     /**
      * @Route("/api/v{version}/_action/plugin/install", name="api.action.plugin.install_all", methods={"POST"})
-     * @param Context $context
      *
-     * @return JsonResponse
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Shopware\Core\Framework\Plugin\Exception\PluginComposerJsonInvalidException
      * @throws \Shopware\Core\Framework\Plugin\Requirement\Exception\RequirementStackException
@@ -81,7 +77,7 @@ class PluginController extends AbstractController
     {
         $pluginList = $this->refreshPlugins($context);
 
-        foreach($pluginList as $plugin) {
+        foreach ($pluginList as $plugin) {
             $this->pluginLifecycleService->installPlugin($plugin, $context);
         }
 
@@ -90,9 +86,7 @@ class PluginController extends AbstractController
 
     /**
      * @Route("/api/v{version}/_action/plugin/activate", name="api.action.plugin.activate_all", methods={"POST"})
-     * @param Context $context
      *
-     * @return JsonResponse
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Shopware\Core\Framework\Plugin\Exception\PluginNotInstalledException
      */
@@ -100,7 +94,7 @@ class PluginController extends AbstractController
     {
         $pluginList = $this->refreshPlugins($context);
 
-        foreach($pluginList as $plugin) {
+        foreach ($pluginList as $plugin) {
             $this->pluginLifecycleService->activatePlugin($plugin, $context);
         }
 
@@ -109,9 +103,7 @@ class PluginController extends AbstractController
 
     /**
      * @Route("/api/v{version}/_action/plugin/update", name="api.action.plugin.update_all", methods={"POST"})
-     * @param Context $context
      *
-     * @return JsonResponse
      * @throws PluginComposerJsonInvalidException
      * @throws RequirementStackException
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
@@ -120,7 +112,7 @@ class PluginController extends AbstractController
     {
         $pluginList = $this->refreshPlugins($context);
 
-        foreach($pluginList as $plugin) {
+        foreach ($pluginList as $plugin) {
             $this->pluginLifecycleService->updatePlugin($plugin, $context);
         }
 
@@ -129,9 +121,7 @@ class PluginController extends AbstractController
 
     /**
      * @Route("/api/v{version}/_action/plugin/deactivate", name="api.action.plugin.deactivate_all", methods={"POST"})
-     * @param Context $context
      *
-     * @return JsonResponse
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Shopware\Core\Framework\Plugin\Exception\PluginNotActivatedException
      * @throws \Shopware\Core\Framework\Plugin\Exception\PluginNotInstalledException
@@ -140,7 +130,7 @@ class PluginController extends AbstractController
     {
         $pluginList = $this->refreshPlugins($context);
 
-        foreach($pluginList as $plugin) {
+        foreach ($pluginList as $plugin) {
             $this->pluginLifecycleService->deactivatePlugin($plugin, $context);
         }
 
@@ -150,13 +140,13 @@ class PluginController extends AbstractController
     /**
      * @param $context
      *
-     * @return EntitySearchResult
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      */
-    private function refreshPlugins($context) : EntitySearchResult {
-        $pluginList = $this->pluginRepo->search(new Criteria([]), $context);
-
+    private function refreshPlugins($context): EntitySearchResult
+    {
         $this->pluginService->refreshPlugins($context, new NullIO());
+
+        $pluginList = $this->pluginRepo->search(new Criteria([]), $context);
 
         return $pluginList;
     }
