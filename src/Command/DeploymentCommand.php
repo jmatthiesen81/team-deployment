@@ -46,6 +46,7 @@ class DeploymentCommand extends Command
      * @return int|void|null
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     * @throws \ReflectionException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
