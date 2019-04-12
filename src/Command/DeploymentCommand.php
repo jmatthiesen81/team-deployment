@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace TeamDeployment\Plugin\Deployment\Commands;
+namespace TeamDeployment\Plugin\Deployment\Command;
 
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
@@ -10,16 +10,16 @@ use Shopware\Core\Framework\Plugin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
- * Class Deployment
- *
- * @package TeamDeployment\Plugin\Deployment\Commands
+ * Class DeploymentCommand
+ * @package TeamDeployment\Plugin\Deployment\Command
  */
-class Deployment extends Command
+class DeploymentCommand extends Command
 {
     /**
      * @var EntityRepositoryInterface
@@ -27,9 +27,8 @@ class Deployment extends Command
     protected $pluginRepository;
 
     /**
-     * Deployment constructor.
-     *
-     * @param string                    $name
+     * DeploymentCommand constructor.
+     * @param string $name
      * @param EntityRepositoryInterface $pluginRepository
      */
     public function __construct(string $name, EntityRepositoryInterface $pluginRepository)
@@ -46,72 +45,70 @@ class Deployment extends Command
      * @return int|void|null
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     * @throws \ReflectionException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $command = $this->getApplication()->find('plugin:refresh');
-        $command->run(new ArrayInput([]), $output);
+        $command->run(new ArrayInput([]), new NullOutput());
 
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('managedByComposer', 1));
         $plugins = $this->pluginRepository->search($criteria, Context::createDefaultContext());
 
-        /** @var Plugin $plugin */
+        /** @var Plugin\PluginEntity $plugin */
         foreach ($plugins as $plugin) {
-            $pluginName = $plugin->getName();
+            $pluginName = (new \ReflectionClass($plugin->getName()))->getShortName();
 
-            if ($input->getOption('interactive')) {
-                $this->question($pluginName, $input, $output);
-            } else {
-                $this->installPlugin($pluginName, $output);
-                $this->updatePlugin($pluginName, $output);
+            // Check if plugin is installed, otherwise if an update is available
+            if (!$plugin->getInstalledAt()) {
+                if ($this->askQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', $input, $output)) {
+                    $this->installPlugin($pluginName, $output);
+                }
+            } elseif ($plugin->getUpgradeVersion()) {
+                if ($this->askQuestion('Update ' . $pluginName . '? (Y/n) ', $input, $output)) {
+                    $this->updatePlugin($pluginName, $output);
+                }
             }
         }
     }
 
     /**
-     * @param string          $pluginName
-     * @param InputInterface  $input
+     * @param string $questionText
+     * @param InputInterface $input
      * @param OutputInterface $output
-     *
+     * @return bool
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
-    public function question(string $pluginName, InputInterface $input, OutputInterface $output)
+    private function askQuestion(string $questionText, InputInterface $input, OutputInterface $output): bool
     {
-        $helper   = $this->getHelper('question');
-        $question = new ConfirmationQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', true, '/^(y|j)/i');
-        if ($helper->ask($input, $output, $question)) {
-            $this->installPlugin($pluginName, $output);
+        if (!$input->getOption('interactive')) {
+            return true;
         }
-        $question = new ConfirmationQuestion('Update ' . $pluginName . '? (Y/n) ', true, '/^(y|j)/i');
-        if ($helper->ask($input, $output, $question)) {
-            $this->updatePlugin($pluginName, $output);
-        }
+
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion($questionText, true, '/^(y|j)/i');
+
+        return $helper->ask($input, $output, $question);
     }
 
     /**
-     * @param string          $pluginName
-     * @param OutputInterface $output
-     *
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
-    public function installPlugin(string $pluginName, OutputInterface $output)
+    private function installPlugin(string $pluginName, OutputInterface $output)
     {
         $arguments = new ArrayInput(['plugins' => [$pluginName], '--activate' => true]);
-        $command   = $this->getApplication()->find('plugin:install');
+        $command = $this->getApplication()->find('plugin:install');
         $command->run($arguments, $output);
     }
 
     /**
-     * @param string          $pluginName
-     * @param OutputInterface $output
-     *
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
-    public function updatePlugin(string $pluginName, OutputInterface $output)
+    private function updatePlugin(string $pluginName, OutputInterface $output)
     {
         $arguments = new ArrayInput(['plugins' => [$pluginName]]);
-        $command   = $this->getApplication()->find('plugin:update');
+        $command = $this->getApplication()->find('plugin:update');
         $command->run($arguments, $output);
     }
 }
