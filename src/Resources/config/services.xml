@@ -6,7 +6,7 @@
 
     <services>
         <!-- Command -->
-        <service id="TeamDeployment\Plugin\Deployment\Commands\Deployment">
+        <service id="TeamDeployment\Plugin\Deployment\Command\DeploymentCommand">
             <argument>team-deployment:deploy</argument>
             <argument id="plugin.repository" type="service" key="$pluginRepository" />
             <tag name="console.command"/>
