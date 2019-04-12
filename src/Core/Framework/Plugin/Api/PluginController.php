@@ -154,9 +154,9 @@ class PluginController extends AbstractController
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      */
     private function refreshPlugins($context) : EntitySearchResult {
-        $pluginList = $this->pluginRepo->search(new Criteria([]), $context);
-
         $this->pluginService->refreshPlugins($context, new NullIO());
+
+        $pluginList = $this->pluginRepo->search(new Criteria([]), $context);
 
         return $pluginList;
     }
