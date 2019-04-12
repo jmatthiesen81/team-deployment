@@ -1,8 +1,21 @@
 # TeamDeployment
 Hot deployment stuff!
 
-Just use the console command\
-`bin/console team-deployment:deploy`\
-to install activate and update all plugins.
+###Console
+To install activate and update all plugins, use\
+`bin/console team-deployment:deploy`
 
-You are being asked before any plugin is installed or updated.
+If you want to start the interactive mode, use\
+`bin/console team-deployment:deploy -i`
+
+###API
+POST /api/v{version}/_action/plugin/deploy\
+POST /api/v{version}/_action/plugin/install\
+POST /api/v{version}/_action/plugin/activate\
+POST /api/v{version}/_action/plugin/update\
+POST /api/v{version}/_action/plugin/deactivate
+
+##Contributors
+Lucas Herbst @lherbst\
+Amir El Sayed @Schwierig\
+Patrick Kumm @patkdot
