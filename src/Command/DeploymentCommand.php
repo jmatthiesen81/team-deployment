@@ -58,7 +58,7 @@ class DeploymentCommand extends Command
 
         /** @var Plugin\PluginEntity $plugin */
         foreach ($plugins as $plugin) {
-            $pluginName = $plugin->getName();
+            $pluginName = (new \ReflectionClass($plugin->getName()))->getShortName();
 
             // Check if plugin is installed, otherwise if an update is available
             if (!$plugin->getInstalledAt()) {
