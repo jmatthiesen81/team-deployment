@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace TeamDeployment\Plugin\Deployment\Commands;
+namespace TeamDeployment\Plugin\Deployment\Command;
 
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
@@ -10,15 +10,15 @@ use Shopware\Core\Framework\Plugin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
- * Class Deployment
- *
+ * Class DeploymentCommand
  * @package TeamDeployment\Plugin\Deployment\Commands
  */
-class Deployment extends Command
+class DeploymentCommand extends Command
 {
     /**
      * @var EntityRepositoryInterface
@@ -47,9 +47,8 @@ class Deployment extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Refreshing plugins...');
         $command = $this->getApplication()->find('plugin:refresh');
-        $command->run(new ArrayInput([]), $output);
+        $command->run($input, new NullOutput());
 
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('managedByComposer', 1));
@@ -60,18 +59,21 @@ class Deployment extends Command
             $pluginName = $plugin->getName();
             $helper     = $this->getHelper('question');
 
-            $question = new ConfirmationQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', true, '/^(y|j)/i');
-            if ($helper->ask($input, $output, $question)) {
-                $arguments = new ArrayInput(['plugins' => [$pluginName], '--activate' => true]);
-                $command   = $this->getApplication()->find('plugin:install');
-                $command->run($arguments, $output);
-            }
-
-            $question = new ConfirmationQuestion('Update ' . $pluginName . '? (Y/n) ', true, '/^(y|j)/i');
-            if ($helper->ask($input, $output, $question)) {
-                $arguments = new ArrayInput(['plugins' => [$pluginName]]);
-                $command   = $this->getApplication()->find('plugin:update');
-                $command->run($arguments, $output);
+            // Check if plugin is installed, otherwise if an update is available
+            if (!$plugin->getInstalledAt()) {
+                $question = new ConfirmationQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', true, '/^(y|j)/i');
+                if ($helper->ask($input, $output, $question)) {
+                    $arguments = new ArrayInput(['plugins' => [$pluginName], '--activate' => true]);
+                    $command = $this->getApplication()->find('plugin:install');
+                    $command->run($arguments, $output);
+                }
+            } elseif ($plugin->getUpgradeVersion()) {
+                $question = new ConfirmationQuestion('Update ' . $pluginName . '? (Y/n) ', true, '/^(y|j)/i');
+                if ($helper->ask($input, $output, $question)) {
+                    $arguments = new ArrayInput(['plugins' => [$pluginName]]);
+                    $command   = $this->getApplication()->find('plugin:update');
+                    $command->run($arguments, $output);
+                }
             }
         }
     }
