@@ -13,11 +13,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-/**
- * Class Deployment
- *
- * @package TeamDeployment\Plugin\Deployment\Commands
- */
 class Deployment extends Command
 {
     /**
@@ -25,12 +20,6 @@ class Deployment extends Command
      */
     protected $pluginRepository;
 
-    /**
-     * Deployment constructor.
-     *
-     * @param string                    $name
-     * @param EntityRepositoryInterface $pluginRepository
-     */
     public function __construct(string $name, EntityRepositoryInterface $pluginRepository)
     {
         parent::__construct($name);
@@ -38,12 +27,10 @@ class Deployment extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|void|null
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     *
+     * @return int|void|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -58,19 +45,19 @@ class Deployment extends Command
         /** @var Plugin $plugin */
         foreach ($plugins as $plugin) {
             $pluginName = $plugin->getName();
-            $helper     = $this->getHelper('question');
+            $helper = $this->getHelper('question');
 
             $question = new ConfirmationQuestion('Install and activate ' . $pluginName . ' ?(Y/n) ', true, '/^(y|j)/i');
             if ($helper->ask($input, $output, $question)) {
                 $arguments = new ArrayInput(['plugins' => [$pluginName], '--activate' => true]);
-                $command   = $this->getApplication()->find('plugin:install');
+                $command = $this->getApplication()->find('plugin:install');
                 $command->run($arguments, $output);
             }
 
             $question = new ConfirmationQuestion('Update ' . $pluginName . '? (Y/n) ', true, '/^(y|j)/i');
             if ($helper->ask($input, $output, $question)) {
                 $arguments = new ArrayInput(['plugins' => [$pluginName]]);
-                $command   = $this->getApplication()->find('plugin:update');
+                $command = $this->getApplication()->find('plugin:update');
                 $command->run($arguments, $output);
             }
         }
