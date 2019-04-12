@@ -2,6 +2,7 @@
   "name": "team-deployment/deployment",
   "description": "Deployment",
   "type": "shopware-platform-plugin",
+  "version": "1.0.0",
   "license": "MIT",
   "authors": [
     {
@@ -17,7 +18,8 @@
     "shopware-plugin-class": "TeamDeployment\\Plugin\\Deployment\\Deployment",
     "copyright": "(c) Team Deployment",
     "label": {
-      "en_GB": "Deployment for Shopware"
+      "en_GB": "Deployment for Shopware",
+      "de_DE": "Deployment for Shopware"
     }
   }
 }
